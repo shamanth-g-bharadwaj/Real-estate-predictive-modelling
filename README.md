@@ -1,116 +1,149 @@
-# Home Buying Decision Prediction
+# Real Estate Buying Decision Prediction
 
-A predictive analytics project focused on understanding and classifying home buying decisions using real estate data, feature engineering, and machine learning models.
+A predictive analytics project focused on understanding and classifying home buying decisions using real estate transaction data, data preprocessing, feature engineering, and machine learning models.
 
 ## Project Overview
 
-This project explores how predictive analytics can be used to understand home buying behaviour in the real estate market. The main objective was to build classification models that predict whether a property is likely to be bought based on a range of property features and market-related variables.
+This project explores how predictive analytics can be used to support decision-making in the real estate market by predicting whether a property is likely to be purchased. The analysis is based on structured housing data containing property characteristics such as size, location, availability, pricing, energy rating, and renovation requirements.
 
-The project combines data preparation, exploratory analysis, feature engineering, and predictive modelling to generate insights that could support real estate agencies, property platforms, and decision-makers in understanding buyer preferences more effectively.
+The project places strong emphasis on data cleaning and preprocessing, including missing-value treatment, outlier handling, standardization, and feature engineering, before applying predictive models. Multiple classification techniques were compared to identify the most effective approach for predicting buying behaviour.
 
 ## Objective
 
-The aim of this project was to predict the binary outcome of **buying_status** using housing-related features such as price, square footage, number of rooms, energy rating, availability, and renovation requirement.
+The primary objective of this project was to prepare a real estate dataset for predictive modelling and build classification models that predict the binary target variable **buying_status**.
 
-## Dataset
+The project also aimed to:
+- improve data quality through cleaning and preprocessing
+- engineer meaningful features to enhance model performance
+- compare multiple machine learning models
+- identify the most influential factors driving buying decisions
 
-The analysis used the **Ireland House Price Final** dataset.
+## Dataset Overview
+
+The dataset contains housing-related information such as:
+
+- property scope
+- availability
+- location
+- bhk / bedrooms
+- total square footage
+- bathrooms
+- balcony
+- price per square foot
+- energy rating
+- renovation needed
+- buying status
 
 ### Initial dataset profile
 - **13,320 rows**
 - **12 columns**
-- Included property-related variables such as:
-  - property scope
-  - availability
-  - location
-  - bedrooms
-  - total square footage
-  - bathrooms
-  - balconies
-  - buying status
-  - BER
-  - renovation needed
-  - price per square foot
 
-After cleaning and preprocessing, the final dataset contained:
-- **10,319 rows**
-- **11 columns**
+The dataset included both numerical and categorical attributes, along with missing values and outliers that required preprocessing before modelling. :contentReference[oaicite:1]{index=1}
 
-## Project Workflow
+## Data Preparation and Preprocessing
 
-### 1. Data Preparation and Initial Exploration
-The project began with:
-- loading the housing dataset
-- inspecting its structure and completeness
-- renaming columns for readability and consistency
-- checking unique values
-- performing initial exploratory analysis before cleaning
+A substantial part of the project focused on preparing the dataset for predictive analysis.
 
-This early phase helped identify missing values, skewed distributions, and outliers in key numerical variables.
+### Key preprocessing steps
+- renamed columns for readability and consistency
+- reviewed dataset structure, unique values, and summary statistics
+- checked and handled missing values
+- standardized mixed-format columns such as `bhk` and `total_sqft`
+- converted categorical fields into numeric form
+- rounded and formatted price-related columns
+- removed the `ID` column as redundant
+- identified and removed outliers using the IQR method
+- saved the cleaned dataset for downstream modelling
 
-### 2. Data Cleaning and Standardization
-Several preprocessing steps were applied to improve data quality:
+Missing values were handled using suitable strategies such as filling with zero in selected fields and applying other context-aware cleaning choices depending on the variable. Outliers were removed to reduce distortion in modelling results and improve predictive reliability. :contentReference[oaicite:2]{index=2}
 
-- removed non-analytical columns such as `id`
-- standardized mixed-format columns like `bedrooms` and `total_sqft`
-- converted categorical variables into numeric/ordinal format
-- encoded `buying_status`, `BER`, and `renovation_needed`
-- handled outliers using the IQR method
-- treated missing values using contextual imputation
-- ensured all fields were ready for modelling
+## Exploratory Data Analysis
 
-### 3. Feature Engineering
-To improve predictive power, new derived variables were created, including:
+Initial exploratory analysis was carried out to understand:
+- distributions of numerical variables
+- category frequencies
+- missing-value patterns
+- price variation
+- potential outliers
+- relationships between important real estate attributes
 
-- **log_total_sqft**
-- **log_price_per_sqft**
-- **sqft_per_room**
+Histograms, bar plots, scatter plots, and summary statistics were used to examine the dataset and guide the cleaning process. This phase helped reveal skewness in numerical features and highlighted the need for preprocessing transformations before modelling. :contentReference[oaicite:3]{index=3}
 
-These features helped reduce skewness, improve linearity, and better capture space efficiency in a property.
+## Feature Engineering
 
-### 4. Exploratory and Analytical Insights
-The analysis showed that:
+To improve model performance and analytical value, several new features were created:
 
-- `total_sqft` and `price_per_sqft` had moderate positive skewness
-- log transformations improved symmetry and made the variables more suitable for modelling
-- property size showed positive relationships with price, bedrooms, and balconies
-- location-specific scatter plots revealed different market dynamics across regions
+- **bath_to_bed_ratio**  
+  Captures the relationship between bathrooms and bedrooms.
 
-### 5. Predictive Modelling
-Two classification models were developed:
+- **area_to_bedroom_ratio**  
+  Measures how much space is allocated per bedroom.
 
-- **Logistic Regression**
-- **Random Forest Classifier**
+- **total_price**  
+  Derived from `price_per_sqft × total_sqft`.
 
-The target variable was **buying_status**, and the data was split into training and testing sets using an 80/20 split.
+These engineered variables were designed to better reflect layout efficiency, property value, and practical buyer considerations. :contentReference[oaicite:4]{index=4}
 
-## Model Performance
+## Models Used
+
+The project compared four classification models for predicting **buying_status**:
+
+- Logistic Regression
+- Random Forest
+- K-Nearest Neighbours (KNN)
+- Decision Tree
+
+These models were evaluated using:
+- accuracy
+- AUC
+- precision
+- recall
+- confusion matrix analysis
+
+## Model Performance Summary
 
 ### Logistic Regression
-- Accuracy: **72.77%**
+- Accuracy: **71.56%**
+- Served as a strong and interpretable baseline
+- Performed well on non-buyers but struggled more with identifying buyers
 
-### Random Forest Classifier
-- Initial Accuracy: **72.62%**
-- Tuned Accuracy: **74.66%**
+### Random Forest
+- Accuracy: **72.38%**
+- Better at capturing non-linear relationships
+- Provided stronger and more balanced classification performance
 
-After hyperparameter tuning, the Random Forest model performed better and was selected as the stronger model for this project.
+### K-Nearest Neighbours (KNN)
+- Accuracy: **67.83%**
+- AUC: **0.68**
+- Less effective due to sensitivity to noise and overlapping class boundaries
+
+### Decision Tree
+- Accuracy: **64.24%**
+- AUC: **0.81**
+- Easy to interpret, but prone to overfitting
+
+### Tuned Random Forest
+After hyperparameter tuning, the Random Forest model achieved:
+
+- Accuracy: **75.63%**
+- AUC: **0.93**
+
+This made it the best-performing model in the project. :contentReference[oaicite:5]{index=5}
 
 ## Key Predictors
 
-Feature importance analysis showed that the most influential variables were:
+Feature importance analysis showed that the most influential variables included:
 
 - `price_per_sqft`
-- `log_price_per_sqft`
-- `sqft_per_room`
 - `total_sqft`
-- `log_total_sqft`
-- `BER`
+- `area_to_bedroom_ratio`
+- `bath_to_bed_ratio`
+- `energy_rating`
+- `availability`
+- `renovation_needed`
+- `location`
 
-These findings suggest that buyers are strongly influenced by:
-- price
-- property size
-- space efficiency
-- energy efficiency
+These findings suggest that buyers are influenced not only by price and size, but also by layout efficiency, sustainability, readiness, and condition of the property. :contentReference[oaicite:6]{index=6}
 
 ## Tools Used
 
@@ -127,12 +160,14 @@ These findings suggest that buyers are strongly influenced by:
 This project demonstrates practical skills in:
 
 - data cleaning and preprocessing
-- handling missing values and outliers
+- outlier detection and treatment
+- missing-value handling
 - feature engineering
 - exploratory data analysis
 - classification modelling
-- model comparison and evaluation
-- interpretation of predictive insights in a real estate context
+- model comparison and tuning
+- interpretation of real estate analytics
+
 
 ## License
 
